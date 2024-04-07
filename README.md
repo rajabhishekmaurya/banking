@@ -1,2 +1,2 @@
 # banking
-learning &amp; creating project for banking service using Golang
+learning &amp; developing a project for banking service using Golang
