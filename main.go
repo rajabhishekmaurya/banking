@@ -1,9 +1,10 @@
 package main
-
-import "github.com/rajabhishekmaurya/banking/app"
+import (
+	"github.com/rajabhishekmaurya/banking/app"
+)
 
 func main() {
-	Start()
+	app.Start()
 }
 
 
