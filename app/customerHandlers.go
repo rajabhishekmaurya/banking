@@ -3,18 +3,11 @@ package app
 import (
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/rajabhishekmaurya/banking/service"
 )
-
-type Customers struct {
-	Name    string `json:"full_name" xml:"Name"`
-	City    string `json:"city" xml:"city"`
-	ZipCode string `json:"zip_code" xml:"zip_code"`
-}
 
 type CustomerHandlers struct {
 	service service.CustomerService
@@ -43,14 +36,21 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 
 	vars := mux.Vars(r)
 	id := vars["customer_id"]
-	customers, err := ch.service.GetCustomer(id)
+	customer, err := ch.service.GetCustomer(id)
 
 	if err != nil {
-		w.WriteHeader(err.Code)
-		fmt.Fprint(w, err.Message)
+		writeResponse(w, err.Code, err.AsMessage())
 	}else{
-		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customer)
 	}
 	
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(data); err !=nil {
+		panic(err)
+	}
+
 }
