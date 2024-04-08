@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,17 +18,14 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 	// 	{Name: "MRaj", City: "Hyderabad", ZipCode: "500075"},
 	// }
 
-	customers, _ := ch.service.GetAllCustomer()
+	status := r.URL.Query().Get("status")
+	customers, err := ch.service.GetAllCustomer(status)
 
-	
-	if r.Header.Get("Content-type") == "application/xml"{
-		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customers)
+	if err !=nil {
+		writeResponse(w, err.Code, err.Message)
 	}else{
-		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customers)
 	}
-	
 }
 
 func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
