@@ -55,7 +55,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	return &c, nil
 }
 
-func NewCustomeRepositoryDb() CustomerRepositoryDb {
+func NewCustomeRepositoryDb(dbClient*sqlx.DB) CustomerRepositoryDb {
 
 	username := "root"
 	password := "my-Password"
